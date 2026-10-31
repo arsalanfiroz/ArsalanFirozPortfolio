@@ -1,0 +1,23 @@
+{
+  "name": "arsalan-firoz-portfolio",
+  "version": "1.0.0",
+  "description": "Personal Portfolio of Arsalan Firoz - Backend Software Engineer, Distributed Systems & GenAI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "preview": "node server.js"
+  },
+  "author": "Arsalan Firoz <arsalanfiroz.work@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "portfolio",
+    "software-engineer",
+    "backend",
+    "distributed-systems",
+    "system-design",
+    "genai",
+    "llm",
+    "rag"
+  ]
+}
