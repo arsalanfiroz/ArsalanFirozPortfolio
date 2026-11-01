@@ -5,6 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
+  initHeroPhotoParallax();
   initMetricsCounter();
   initSystemDesignLab();
   initProjectsFilter();
@@ -13,6 +14,48 @@ document.addEventListener('DOMContentLoaded', () => {
   initCopyButtons();
   initContactForm();
 });
+
+/* ==========================================================================
+   HERO PHOTO PARALLAX
+   ========================================================================== */
+function initHeroPhotoParallax() {
+  const photo = document.querySelector('.hero-portrait-stage');
+  if (!photo) return;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  let frameRequested = false;
+  let parallaxY = 0;
+  let photoScale = 1;
+  let initialBottom = photo.getBoundingClientRect().bottom + window.scrollY;
+
+  const updatePhoto = () => {
+    const scrollY = window.scrollY;
+    const fadeStart = window.innerHeight * 0.72;
+    const fadeDistance = 1800;
+    parallaxY = reduceMotion.matches ? 0 : Math.min(scrollY * 0.45, 520);
+    const visualBottom = initialBottom - scrollY + parallaxY + photo.offsetHeight * (photoScale - 1) / 2;
+    const fadeProgress = Math.max(0, Math.min((fadeStart - visualBottom) / fadeDistance, 1));
+    photoScale = reduceMotion.matches ? 1 : 1 - fadeProgress * 0.18;
+
+    photo.style.setProperty('--hero-photo-y', `${parallaxY}px`);
+    photo.style.setProperty('--hero-photo-scale', `${photoScale}`);
+    photo.style.setProperty('--hero-photo-opacity', `${1 - fadeProgress}`);
+    frameRequested = false;
+  };
+
+  const scheduleUpdate = () => {
+    if (frameRequested) return;
+    frameRequested = true;
+    window.requestAnimationFrame(updatePhoto);
+  };
+
+  window.addEventListener('scroll', scheduleUpdate, { passive: true });
+  window.addEventListener('resize', () => {
+    initialBottom = photo.getBoundingClientRect().bottom + window.scrollY - parallaxY - photo.offsetHeight * (photoScale - 1) / 2;
+    scheduleUpdate();
+  }, { passive: true });
+  updatePhoto();
+}
 
 /* ==========================================================================
    NAVBAR & SCROLL SPY
